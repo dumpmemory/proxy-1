@@ -65,41 +65,6 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
                         .channel(NioSocketChannel.class)
                         .option(ChannelOption.SO_KEEPALIVE, true)
                         .handler(new ProxyBackendServerHandler(ctx.channel())
-//                        new ChannelInitializer<SocketChannel>() {
-//                            @Override
-//                            protected void initChannel(SocketChannel ch) {
-//                                ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
-//                                                          @Override
-//                                                          public void channelInactive(ChannelHandlerContext ctxb) throws Exception {
-//                                                              ctx.close();
-//                                                              ctxb.close();
-//                                                          }
-//
-//                                                          @Override
-//                                                          public void channelActive(ChannelHandlerContext ctxb) {
-//                                                              switch (type) {
-//                                                                  case 0:
-//                                                                      ctx.channel().writeAndFlush(Unpooled.copiedBuffer(StaticValue.connectResponse, StandardCharsets.UTF_8));
-//                                                                      break;
-//                                                                  case 1:
-//                                                                      ctxb.writeAndFlush(byteBuf);
-//                                                                      break;
-//                                                              }
-//                                                          }
-//
-//                                                          @Override
-//                                                          public void channelRead(ChannelHandlerContext ctxb, Object msg) {
-//                                                              ctx.channel().writeAndFlush(msg);
-//                                                          }
-//
-//                                                          @Override
-//                                                          public void exceptionCaught(ChannelHandlerContext ctxb, Throwable cause) throws Exception {
-//
-//                                                          }
-//                                                      }
-//                                );
-//                            }
-//                        }
                         );
                 ChannelFuture cf = bootstrap.connect(new InetSocketAddress(host.url(), host.port()));
                 outboundChannel=cf.channel();

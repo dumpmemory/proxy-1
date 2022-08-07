@@ -43,7 +43,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                                     @Override
                                     public void channelInactive(ChannelHandlerContext ctxb) throws Exception {
                                        Util.closeOnFlush(ctx.channel());
-//                                        ctx.channel().close();
                                     }
                                     @Override
                                     public void channelRead(ChannelHandlerContext ctxb, Object msg) throws Exception {
@@ -60,8 +59,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                         });
                 cf = bootstrap.connect(inetSocketAddress).addListener(future -> {
                     if (!future.isSuccess()) {
-                        System.out.println(inetSocketAddress+"连接失败");
-//                        ctx.channel().close();
+                        System.out.println(inetSocketAddress+"连接失败  引用:"+((ByteBuf)msg).refCnt());
                         Util.closeOnFlush(ctx.channel());
                         ReferenceCountUtil.release(msg);
                     }
@@ -78,10 +76,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("异常" + cause.getMessage());
         try {
             Util.closeOnFlush(ctx.channel());
-//            ctx.channel().close();
             if (cf.channel() != null) {
                 Util.closeOnFlush(cf.channel());
-//                cf.channel().close();
             } else {
                 System.out.println("channel为空");
             }

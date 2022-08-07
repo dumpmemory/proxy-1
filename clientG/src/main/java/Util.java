@@ -1,6 +1,4 @@
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
 import org.apache.commons.io.IOUtils;
 
 import java.io.FileInputStream;
