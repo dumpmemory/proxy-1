@@ -49,7 +49,7 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
             try {
                 host = Util.parseUrl(bytes);
             } catch (Exception e) {
-                logger.info("链接解析错误"+new String(bytes)+"//"+ctx.channel().remoteAddress());
+                logger.error("链接解析错误"+new String(bytes)+"//"+ctx.channel().remoteAddress());
                 ReferenceCountUtil.release(msg);
                 ctx.close();
                 return;
