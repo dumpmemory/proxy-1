@@ -49,7 +49,7 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
             try {
                 host = Util.parseUrl(bytes);
             } catch (Exception e) {
-                logger.info("链接解析错误"+new String(bytes));
+                logger.info("链接解析错误"+new String(bytes)+"//"+ctx.channel().remoteAddress());
                 ReferenceCountUtil.release(msg);
                 ctx.close();
                 return;
@@ -75,7 +75,7 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
                             ctx.close();
                             logger.warn("目标客户端连接失败" + host.url() + "活动" + cf.channel().isActive() + "打开" + cf.channel().isOpen()+"引用:"+byteBuf.refCnt());
                             if (byteBuf.refCnt() == 1) {
-                                logger.info("释放消息1");
+                                logger.info("释放消息1"+"引用:"+byteBuf.refCnt());
                                 ReferenceCountUtil.release(msg);
                             }
                         } else {
