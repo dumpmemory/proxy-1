@@ -34,6 +34,9 @@ public class ProxyBackendServerHandler extends ChannelInboundHandlerAdapter {
             logger.warn("in未活动,打开" + inboundChannel.isOpen() + "引用" + ((ByteBuf) msg).refCnt());
             ReferenceCountUtil.release(msg);
         }
+        if (((ByteBuf) msg).refCnt() != 0) {
+            logger.warn("out msg的引用不为0"+((ByteBuf) msg).refCnt());
+        }
     }
 
     @Override

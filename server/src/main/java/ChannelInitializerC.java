@@ -1,9 +1,6 @@
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.*;
-import io.netty.util.ReferenceCountUtil;
-
-import java.util.HashMap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
 
 public class ChannelInitializerC extends ChannelInitializer {
 
