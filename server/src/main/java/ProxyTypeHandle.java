@@ -29,14 +29,20 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf byteBuf = (ByteBuf) msg;
-        if (status && byteBuf.readableBytes() >= 4) {
-            int ps = byteBuf.readInt();
-            if (ps != password) {
+        if (status) {
+            if (byteBuf.readableBytes() >= 4) {
+                int ps = byteBuf.readInt();
+                if (ps != password) {
+                    logger.warn("不合法请求" + ctx.channel().remoteAddress());
+                    ctx.close();
+                    return;
+                } else {
+                    logger.info("连接成功" + ctx.channel().remoteAddress());
+                }
+            } else {
                 logger.warn("不合法请求" + ctx.channel().remoteAddress());
                 ctx.close();
                 return;
-            } else {
-                logger.info("连接成功" + ctx.channel().remoteAddress());
             }
         }
 
