@@ -37,6 +37,7 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
                     ctx.close();
                     return;
                 } else {
+                    status = false;
                     logger.info("连接成功" + ctx.channel().remoteAddress());
                 }
             } else {
@@ -45,8 +46,6 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
                 return;
             }
         }
-
-        status = false;
         if (outboundChannel == null) {
             int readNum = byteBuf.readableBytes();
             byte[] bytes = new byte[readNum];
