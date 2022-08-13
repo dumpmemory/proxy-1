@@ -8,7 +8,6 @@ import io.netty.handler.codec.http.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
-import java.net.URLEncoder;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.*;
 import static io.netty.handler.codec.http.HttpHeaderValues.*;
@@ -19,7 +18,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
     private static final byte[] CONTENT ;
     static {
         try {
-            CONTENT=Util.getPac();
+            CONTENT= ClientUtil.getPac();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

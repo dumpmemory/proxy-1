@@ -27,7 +27,7 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        Util.closeOnFlush(inboundChannel,3);
+        ClientUtil.closeOnFlush(inboundChannel,3);
     }
 
     @Override
@@ -37,6 +37,6 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
         } else {
             logger.info("异常2" + cause.getMessage());
         }
-        Util.closeOnFlush(ctx.channel(),4);
+        ClientUtil.closeOnFlush(ctx.channel(),4);
     }
 }

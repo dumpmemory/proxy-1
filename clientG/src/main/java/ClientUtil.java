@@ -8,12 +8,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Util {
+public class ClientUtil {
     private static InetSocketAddress inetSocketAddress;
 
     public static InetSocketAddress getAddr() throws IOException {
         if (inetSocketAddress == null) {
-            synchronized (Util.class) {
+            synchronized (ClientUtil.class) {
                 FileInputStream fileInputStream = new FileInputStream("config.txt");
                 Stream<String> lines = IOUtils.toString(fileInputStream, StandardCharsets.UTF_8).lines();
                 List<String> list = lines.toList();

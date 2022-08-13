@@ -17,7 +17,7 @@ public class ClientApplication {
 
     static {
         try {
-            inetSocketAddress = Util.getAddr();
+            inetSocketAddress = ClientUtil.getAddr();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
