@@ -34,6 +34,7 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
                 int ps = byteBuf.readInt();
                 if (ps != password) {
                     logger.warn("不合法请求" + ctx.channel().remoteAddress());
+                    ReferenceCountUtil.release(msg);
                     ctx.close();
                     return;
                 } else {
@@ -111,6 +112,9 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
                 logger.warn("in未活动,打开" + outboundChannel.isOpen() + "引用" + ((ByteBuf) msg).refCnt());
                 ReferenceCountUtil.release(msg);
             }
+        }
+        if (byteBuf.refCnt() != 0) {
+            logger.warn("msg的引用不为0"+byteBuf.refCnt());
         }
     }
 
