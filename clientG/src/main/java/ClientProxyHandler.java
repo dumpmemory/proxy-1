@@ -54,6 +54,8 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
                 public void operationComplete(ChannelFuture future) {
                     if (!future.isSuccess()) {
                         inboundChannel.close();
+                        ReferenceCountUtil.release(msg);
+                        logger.error("连接目标服务器失败");
                     } else {
                         if (!s) {
                             outboundChannel.write(Unpooled.copyInt(password));
@@ -85,7 +87,6 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
                     }
                 }
             });
-
         } else if (outboundChannel.isActive()) {
             outboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
                 @Override
