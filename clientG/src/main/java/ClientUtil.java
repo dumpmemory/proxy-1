@@ -68,14 +68,6 @@ public class ClientUtil {
             ch.close();
         }
     }
-
-    static byte[] getPac() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("pac.txt");
-        byte[] bytes = IOUtils.toByteArray(fileInputStream);
-        fileInputStream.close();
-        return bytes;
-    }
-
     static boolean urlMatch(String url) throws IOException {
         System.out.println(url);
         int urlHashCode = url.hashCode();

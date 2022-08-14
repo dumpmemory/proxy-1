@@ -22,7 +22,6 @@ public class ClientApplication {
             throw new RuntimeException(e);
         }
     }
-
     public static void main(String[] args) {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         try {
@@ -33,22 +32,8 @@ public class ClientApplication {
                     .childHandler(new ProxyInitializer(inetSocketAddress))
                     .childOption(ChannelOption.SO_KEEPALIVE,true)
                     .bind(1080).sync();
-            ServerBootstrap bootstrapHttp = new ServerBootstrap();
-            bootstrapHttp.group(bossGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .childOption(ChannelOption.SO_KEEPALIVE,true)
-                    .childHandler(new ChannelInitializer<>() {
-                        @Override
-                        protected void initChannel(Channel ch) throws Exception {
-                            ChannelPipeline p = ch.pipeline();
-                            p.addLast(new HttpServerCodec());
-                            p.addLast(new HttpServerExpectContinueHandler());
-                            p.addLast(new HttpServerHandler());
-                        }
-                    });
-            bootstrapHttp.bind(1081);
         } catch (Exception e) {
+            logger.error("启动失败");
             bossGroup.shutdownGracefully();
         }
 
