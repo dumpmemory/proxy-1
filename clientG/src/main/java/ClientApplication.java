@@ -32,7 +32,6 @@ public class ClientApplication {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childHandler(new ProxyInitializer(inetSocketAddress))
                     .childOption(ChannelOption.SO_KEEPALIVE,true)
-                    .childOption(ChannelOption.AUTO_READ, false)
                     .bind(1080).sync();
             ServerBootstrap bootstrapHttp = new ServerBootstrap();
             bootstrapHttp.group(bossGroup)
