@@ -63,13 +63,12 @@ public class ClientUtil {
         return inetSocketAddress;
     }
 
-    static void closeOnFlush(Channel ch, int i) {
+    static void closeOnFlush(Channel ch) {
         if (ch.isActive()) {
             ch.close();
         }
     }
     static boolean urlMatch(String url) throws IOException {
-        System.out.println(url);
         int urlHashCode = url.hashCode();
         boolean match = urlMatch.contains(urlHashCode);
         boolean noMatch = urlNoMatch.contains(urlHashCode);

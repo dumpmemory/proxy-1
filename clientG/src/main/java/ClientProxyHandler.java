@@ -106,7 +106,7 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         if (outboundChannel != null) {
-            ClientUtil.closeOnFlush(outboundChannel, 1);
+            ClientUtil.closeOnFlush(outboundChannel);
         }
     }
 
@@ -121,7 +121,7 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
         for (StackTraceElement stackTraceElement : stackTrace) {
             logger.info(stackTraceElement);
         }
-        ClientUtil.closeOnFlush(ctx.channel(), 2);
+        ClientUtil.closeOnFlush(ctx.channel());
     }
 
     @Override

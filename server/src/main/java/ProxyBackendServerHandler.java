@@ -14,6 +14,8 @@ public class ProxyBackendServerHandler extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         if (inboundChannel.isActive()) {
             inboundChannel.close();
+        } else if (inboundChannel.isOpen()) {
+            logger.warn("in channel 不应该为打开");
         }
     }
 
@@ -26,7 +28,7 @@ public class ProxyBackendServerHandler extends ChannelInboundHandlerAdapter {
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (!future.isSuccess()) {
                         logger.warn("写入失败001 活动" + inboundChannel.isActive() + "打开" + inboundChannel.isOpen());
-                        future.channel().close();
+                        ctx.channel().close();
                     }
                 }
             });
