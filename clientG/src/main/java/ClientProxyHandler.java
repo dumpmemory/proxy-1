@@ -55,7 +55,7 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
                     if (!future.isSuccess()) {
                         inboundChannel.close();
                         ReferenceCountUtil.release(msg);
-                        logger.error("连接目标服务器失败");
+                        logger.error("连接目标服务器失败"+inetSocketAddress);
                     } else {
                         if (!s) {
                             outboundChannel.write(Unpooled.copyInt(password));

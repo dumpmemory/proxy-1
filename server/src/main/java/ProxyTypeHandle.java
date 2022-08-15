@@ -113,9 +113,6 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
                 ReferenceCountUtil.release(msg);
             }
         }
-        if (byteBuf.refCnt() != 0) {
-            logger.warn("in msg的引用不为0"+byteBuf.refCnt());
-        }
     }
 
     @Override

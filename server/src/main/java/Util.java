@@ -1,3 +1,5 @@
+import io.netty.channel.Channel;
+
 public class Util {
     public static Host parseUrl(byte[] bytes) {
         String url = null;
@@ -36,5 +38,9 @@ public class Util {
 
         }
         return new Host(url, Integer.parseInt(port));
+    }
+
+    public static String status(Channel channel) {
+        return "isActive:  "+channel.isActive()+"isOpen:  "+channel.isOpen();
     }
 }
