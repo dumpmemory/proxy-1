@@ -21,8 +21,10 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if (outboundChannel != null&&outboundChannel.isActive()) {
+        if (outboundChannel != null && outboundChannel.isActive()) {
             outboundChannel.close();
+        } else {
+            logger.warn("outboundChannel 没有活动  打开:"+outboundChannel.isOpen());
         }
     }
 
@@ -62,15 +64,13 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
             }
             if (bytes[0] == 71) {
                 type = 1;
-            } else {
-                ReferenceCountUtil.release(msg);
             }
             ctx.channel().eventLoop().execute(() -> {
                 Bootstrap bootstrap = new Bootstrap();
                 bootstrap.group(ctx.channel().eventLoop())
                         .channel(NioSocketChannel.class)
                         .option(ChannelOption.SO_KEEPALIVE, true)
-                        .handler(new ProxyBackendServerHandler(ctx.channel())
+                        .handler(new ProxyBackendServerHandler(ctx.channel(),host)
                         );
                 ChannelFuture cf = bootstrap.connect(new InetSocketAddress(host.url(), host.port()));
                 outboundChannel=cf.channel();
@@ -78,16 +78,15 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
                     @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (!future.isSuccess()) {
-                            ctx.close();
+                            ReferenceCountUtil.release(msg);
                             logger.warn("目标客户端连接失败" + host.url() + "活动" + cf.channel().isActive() + "打开" + cf.channel().isOpen()+"引用:"+byteBuf.refCnt());
-                            if (byteBuf.refCnt() == 1) {
-                                logger.info("释放消息1"+"引用:"+byteBuf.refCnt());
-                                ReferenceCountUtil.release(msg);
-                            }
+                            ctx.close();
+                            future.channel().close();
                         } else {
                             switch (type) {
                                 case 0:
                                     ctx.channel().writeAndFlush(Unpooled.copiedBuffer(StaticValue.connectResponse, StandardCharsets.UTF_8));
+                                    ReferenceCountUtil.release(msg);
                                     break;
                                 case 1:
                                     future.channel().writeAndFlush(byteBuf);

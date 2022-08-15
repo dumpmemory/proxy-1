@@ -7,8 +7,10 @@ import org.apache.logging.log4j.Logger;
 public class ProxyBackendServerHandler extends ChannelInboundHandlerAdapter {
     private final static Logger logger=LogManager.getLogger(ProxyBackendServerHandler.class);
     Channel inboundChannel;
-    public ProxyBackendServerHandler(Channel inboundChannel) {
+    Host host;
+    public ProxyBackendServerHandler(Channel inboundChannel,Host host) {
         this.inboundChannel=inboundChannel;
+        this.host=host;
     }
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
@@ -27,7 +29,7 @@ public class ProxyBackendServerHandler extends ChannelInboundHandlerAdapter {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (!future.isSuccess()) {
-                        logger.warn("写入失败001 活动" + inboundChannel.isActive() + "打开" + inboundChannel.isOpen()+ "引用" + ((ByteBuf) msg).refCnt()+"hashcode"+this.hashCode());
+                        logger.warn("写入连接"+host.url()+"失败001 活动" + inboundChannel.isActive() + "打开" + inboundChannel.isOpen()+ "引用" + ((ByteBuf) msg).refCnt()+"hashcode"+this.hashCode());
                         ctx.channel().close();
                     }
                 }
