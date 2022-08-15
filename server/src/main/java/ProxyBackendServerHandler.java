@@ -29,7 +29,7 @@ public class ProxyBackendServerHandler extends ChannelInboundHandlerAdapter {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (!future.isSuccess()) {
-                        logger.warn("写入连接"+host.url()+"失败001 活动" + inboundChannel.isActive() + "打开" + inboundChannel.isOpen()+ "引用" + ((ByteBuf) msg).refCnt()+"hashcode"+this.hashCode());
+                        logger.warn(host.url()+"数据返回失败001 活动" + inboundChannel.isActive() + "打开" + inboundChannel.isOpen()+ "引用" + ((ByteBuf) msg).refCnt()+"hashcode"+this.hashCode());
                         ctx.channel().close();
                     }
                 }
