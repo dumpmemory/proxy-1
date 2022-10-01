@@ -11,10 +11,10 @@ import java.nio.charset.StandardCharsets;
 
 public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
     private final static Logger logger = LogManager.getLogger(ClientProxyHandler.class);
-    ByteBuf byteBuf;
+
     private InetSocketAddress inetSocketAddress;
     private Channel outboundChannel;
-    private int password = 356324;
+    private static byte[] password = Init.Instance.getPassword();
 
 
     public ClientProxyHandler(InetSocketAddress inetSocketAddress) {
@@ -23,7 +23,7 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        byteBuf = (ByteBuf) msg;
+        ByteBuf byteBuf = (ByteBuf) msg;
         if (outboundChannel == null) {
             byte[] bytes = new byte[byteBuf.readableBytes()];
             byteBuf.getBytes(0, bytes);
@@ -55,19 +55,15 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
                     if (!future.isSuccess()) {
                         inboundChannel.close();
                         ReferenceCountUtil.release(msg);
+                        System.out.println("连接失败"+new String(bytes));
+                        System.out.println("连接目标服务器失败"+inetSocketAddress);
                         logger.error("连接目标服务器失败"+inetSocketAddress);
+                        System.out.println("============");
                     } else {
+                        System.out.println("连接成功"+inetSocketAddress);
                         if (!s) {
-                            outboundChannel.write(Unpooled.copyInt(password));
-                            outboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
-                                @Override
-                                public void operationComplete(ChannelFuture future) throws Exception {
-                                    if (!future.isSuccess()) {
-                                        logger.info("out写入失败 活动:" + outboundChannel.isActive() + "open" + outboundChannel.isOpen() + "引用:" + byteBuf.refCnt());
-                                        future.channel().close();
-                                    }
-                                }
-                            });
+                            outboundChannel.write(Unpooled.copiedBuffer(password));
+                            outboundChannel.writeAndFlush(msg);
                         } else {
                             if (host.https()) {
                                 ReferenceCountUtil.release(msg);
@@ -88,15 +84,7 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
                 }
             });
         } else if (outboundChannel.isActive()) {
-            outboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
-                    if (!future.isSuccess()) {
-                        logger.info("out写入失败 活动:" + outboundChannel.isActive() + "open" + outboundChannel.isOpen() + "引用:" + byteBuf.refCnt());
-                        future.channel().close();
-                    }
-                }
-            });
+            outboundChannel.writeAndFlush(msg);
         } else {
             ReferenceCountUtil.release(msg);
             logger.info("out通道没有活动" + byteBuf.refCnt());
@@ -112,22 +100,12 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        if (byteBuf != null) {
-            logger.info("异常1" + cause.getMessage() + byteBuf.refCnt());
-        } else {
-            logger.info("异常1" + cause.getMessage());
-        }
+        logger.info("异常1" + cause.getMessage());
         StackTraceElement[] stackTrace = cause.getStackTrace();
         for (StackTraceElement stackTraceElement : stackTrace) {
             logger.info(stackTraceElement);
         }
         ClientUtil.closeOnFlush(ctx.channel());
     }
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-
-    }
-
 
 }

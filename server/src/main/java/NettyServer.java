@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 public class NettyServer {
     private final static Logger logger= LogManager.getLogger(NettyServer.class);
     public static void main(String[] args) throws InterruptedException {
+        Init instance = Init.Instance;
         NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
         ServerBootstrap bootstrap = new ServerBootstrap();

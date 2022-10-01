@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 
 public class ClientUtil {
     private static HashSet<Integer> urls;
-    private static HashSet<Integer> urlHash;
     private static HashSet<Integer> urlMatch = new HashSet<>();
     private static HashSet<Integer> urlNoMatch = new HashSet<>();
     private static InetSocketAddress inetSocketAddress;
@@ -27,7 +26,7 @@ public class ClientUtil {
                     urls = new HashSet<>();
                     FileInputStream fileInputStream = null;
                     try {
-                        fileInputStream = new FileInputStream("pacc.txt");
+                        fileInputStream = new FileInputStream("pac.txt");
                     } catch (FileNotFoundException e) {
                         throw new RuntimeException(e);
                     }

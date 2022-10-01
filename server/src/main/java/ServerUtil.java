@@ -1,6 +1,7 @@
 import io.netty.channel.Channel;
 
-public class Util {
+public class ServerUtil {
+    public  static byte[] password;
     public static Host parseUrl(byte[] bytes) {
         String url = null;
         String port = null;

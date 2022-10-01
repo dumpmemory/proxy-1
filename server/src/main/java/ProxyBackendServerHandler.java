@@ -17,33 +17,23 @@ public class ProxyBackendServerHandler extends ChannelInboundHandlerAdapter {
         if (inboundChannel.isActive()) {
             inboundChannel.close();
         } else if (inboundChannel.isOpen()) {
-            logger.warn("in channel 不应该为打开");
+            logger.error("in channel 不应该为打开");
         }
     }
 
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ByteBuf byteBuf= (ByteBuf) msg;
         if (inboundChannel.isActive()) {
-            inboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
-                    if (!future.isSuccess()) {
-                        logger.warn(host.url()+"数据（"+byteBuf.readableBytes()+"）返回失败001 活动" + inboundChannel.isActive() + "打开" + inboundChannel.isOpen()+ "引用" + ((ByteBuf) msg).refCnt()+"hashcode"+this.hashCode());
-                        ctx.channel().close();
-                    }
-                }
-            });
+            inboundChannel.writeAndFlush(msg);
         } else {
-            logger.warn("in未活动,打开" + inboundChannel.isOpen() + "引用" + ((ByteBuf) msg).refCnt());
             ReferenceCountUtil.release(msg);
         }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        logger.warn("out"+cause.getMessage());
+        logger.warn("out123"+cause.getMessage());
         ctx.close();
     }
 }
