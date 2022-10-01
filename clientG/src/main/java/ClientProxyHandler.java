@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 
 public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
     private final static Logger logger = LogManager.getLogger(ClientProxyHandler.class);
@@ -55,19 +54,14 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
                     if (!future.isSuccess()) {
                         inboundChannel.close();
                         ReferenceCountUtil.release(msg);
-                        System.out.println("连接失败"+new String(bytes));
-                        System.out.println("连接目标服务器失败"+inetSocketAddress);
-                        logger.error("连接目标服务器失败"+inetSocketAddress);
-                        System.out.println("============");
+                        logger.error("连接代理服务器失败"+inetSocketAddress);
                     } else {
-                        System.out.println("连接成功"+inetSocketAddress);
                         if (!s) {
                             outboundChannel.write(Unpooled.copiedBuffer(password));
                             outboundChannel.writeAndFlush(msg);
                         } else {
                             if (host.https()) {
                                 ReferenceCountUtil.release(msg);
-                                inboundChannel.writeAndFlush(Unpooled.copiedBuffer(StaticValue.connectResponse, StandardCharsets.UTF_8));
                             } else {
                                 outboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
                                     @Override
