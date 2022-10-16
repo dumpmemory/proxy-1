@@ -18,7 +18,7 @@ public class NettyServer {
                 .childHandler(new ChannelInitializerC())
                 .childOption(ChannelOption.SO_KEEPALIVE,true)
         ;
-        bootstrap.bind(8080).addListener(future -> {
+        bootstrap.bind(3306).addListener(future -> {
             logger.info("启动成功:"+future.isSuccess());
         }).sync();
     }

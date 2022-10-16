@@ -9,6 +9,7 @@ public class ChannelInitializerC extends ChannelInitializer {
     protected void initChannel(Channel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
         pipeline.addLast(new CryDecoder());
+        pipeline.addLast(new CEncoder());
         pipeline.addLast(new ProxyTypeHandle());
     }
 }

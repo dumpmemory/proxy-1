@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 
 public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
     private final static Logger logger = LogManager.getLogger(ClientProxyHandler.class);
@@ -40,6 +41,7 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
                         protected void initChannel(Channel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
                             if (!s) {
+                                pipeline.addLast(new CryDecoder());
                                 pipeline.addLast(new CryEncoder());
                             }
                             pipeline.addLast(new ProxyBackendHandler(inboundChannel));
@@ -62,6 +64,7 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
                         } else {
                             if (host.https()) {
                                 ReferenceCountUtil.release(msg);
+                                inboundChannel.writeAndFlush(Unpooled.copiedBuffer(StaticValue.connectResponse, StandardCharsets.UTF_8));
                             } else {
                                 outboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
                                     @Override
