@@ -17,7 +17,7 @@ public class URLUtil {
                 if (https&&bytes[i] == 58 && bytes[i + 1] != 32&&bytes[i+1]!=47) {
                     ps = i + 1;
                 }
-                if (https&&ps != 0 && bytes[i] == 32) {
+                if (https&&ps != 0 && bytes[i] == 32&&pe==0) {
                     pe = i;
                 }
                 //上面两个if 从 CONNECT www.baidu.com:443 HTTP/1.1 中获取端口
