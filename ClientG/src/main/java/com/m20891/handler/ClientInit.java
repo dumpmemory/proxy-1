@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-public class Init {
+public class ClientInit {
     public final static HashSet<Integer> urls = urlHash();
     public static final Properties properties = loadProperties();
     public static final byte[] password = ((String) properties.get("password")).getBytes(StandardCharsets.UTF_8);
@@ -34,7 +34,7 @@ public class Init {
     private static HashSet<Integer> urlHash() {
         try(FileInputStream fileInputStream = new FileInputStream("pac.txt");) {
             Stream<String> lines = IOUtils.toString(fileInputStream, StandardCharsets.UTF_8).lines();
-            Stream<Integer> urlHash = lines.filter(s -> Strings.isBlank(s) || s.startsWith("#")).map(s -> s.replace(".", "").toLowerCase().hashCode());
+            Stream<Integer> urlHash = lines.filter(s -> !Strings.isBlank(s) || !s.startsWith("#")).map(s -> s.replace(".", "").toLowerCase().hashCode());
             return new HashSet<>(urlHash.toList());
         } catch (IOException e) {
             throw new RuntimeException(e);

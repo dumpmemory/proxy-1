@@ -5,7 +5,7 @@ import io.netty.channel.Channel;
 import java.util.HashSet;
 
 public class ClientUtil {
-    private static HashSet<Integer> urls=Init.urls;
+    private static HashSet<Integer> urls= ClientInit.urls;
     private static HashSet<Integer> urlMatch = new HashSet<>();
     private static HashSet<Integer> urlNoMatch = new HashSet<>();
     static void closeOnFlush(Channel ch) {

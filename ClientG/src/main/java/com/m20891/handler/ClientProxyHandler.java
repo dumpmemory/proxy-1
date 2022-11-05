@@ -21,7 +21,7 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
 
     private InetSocketAddress inetSocketAddress;
     private Channel outboundChannel;
-    private static byte[] password = Init.password;
+    private static byte[] password = ClientInit.password;
 
 
     public ClientProxyHandler(InetSocketAddress inetSocketAddress) {
