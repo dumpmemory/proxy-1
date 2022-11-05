@@ -1,3 +1,5 @@
+import com.m20891.util.url.Host;
+import com.m20891.util.url.URLUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -27,7 +29,7 @@ public class ClientProxyHandler extends ChannelInboundHandlerAdapter {
         if (outboundChannel == null) {
             byte[] bytes = new byte[byteBuf.readableBytes()];
             byteBuf.getBytes(0, bytes);
-            Host host = ClientUtil.parseUrl(bytes);
+            Host host = URLUtil.parseUrl(bytes);
             final boolean s = ClientUtil.urlMatch(host.url());
             if (s) {
                 inetSocketAddress = new InetSocketAddress(host.url(), host.port());

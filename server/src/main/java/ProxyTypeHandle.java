@@ -1,3 +1,5 @@
+import com.m20891.util.url.Host;
+import com.m20891.util.url.URLUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -56,7 +58,7 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
             byteBuf.getBytes(byteBuf.readerIndex(), bytes);
             final Host host;
             try {
-                host = ServerUtil.parseUrl(bytes);
+                host = URLUtil.parseUrl(bytes);
             } catch (Exception e) {
                 logger.error("链接解析错误"+new String(bytes)+"//"+ctx.channel().remoteAddress());
                 ReferenceCountUtil.release(msg);
@@ -79,8 +81,11 @@ public class ProxyTypeHandle extends ChannelInboundHandlerAdapter {
                     @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (!future.isSuccess()) {
+                            int readNum = byteBuf.readableBytes();
+                            byte[] bytes = new byte[readNum];
+                            byteBuf.getBytes(byteBuf.readerIndex(), bytes);
                             ReferenceCountUtil.release(msg);
-                            logger.warn("目标客户端连接失败" + host.url() + "活动" + cf.channel().isActive() + "打开" + cf.channel().isOpen()+"引用:"+byteBuf.refCnt());
+                            logger.warn("目标客户端连接失败" + host.url()+":"+host.port() + "活动" + cf.channel().isActive() + "打开" + cf.channel().isOpen()+"引用:"+byteBuf.refCnt()+"\n"+new String(bytes));
                             ctx.close();
                         } else {
                             switch (type) {
